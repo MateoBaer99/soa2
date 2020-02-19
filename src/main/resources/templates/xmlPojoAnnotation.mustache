@@ -1,0 +1,9 @@
+{{#withXml}}
+@XmlAccessorType(XmlAccessType.FIELD)
+{{#hasVars}} @XmlType(name = "{{classname}}", propOrder =
+    { {{#vars}}"{{name}}"{{^-last}}, {{/-last}}{{/vars}}
+}){{/hasVars}}
+{{^hasVars}}@XmlType(name = "{{classname}}"){{/hasVars}}
+{{^parent}}@XmlRootElement(name="{{xmlName}}"){{/parent}}
+{{#localDate}}(classname == "LocalDate") "@XmlJavaTypeAdapter(value = org.universite.ventes.util.LocalDateAdapter.class)" {{/localDate}}
+{{/withXml}}

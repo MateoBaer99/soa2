@@ -1,0 +1,194 @@
+openapi: 3.0.0
+info:
+  version: "1.0"
+  description: "Cette API propose la gestion des commandes avec consultation et création de commandes"
+  title: "APIs de gestion des commandes"
+  contact:
+    name: Universite Toulouse
+tags:
+  - name: Gestion des commandes
+servers:
+  - url: /api
+  - url: http://tests.ventes.com
+    description: Serveur de tests
+paths:
+  /commandes:
+    get:
+      tags:
+        - Gestion des commandes
+      summary: Consultation Commandes
+      description: Fournit la liste des commandes
+      operationId: getCommandes
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Commande"
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Commande"
+                xml:
+                  name: Commandes
+                  wrapped: true  
+    post:
+      tags:
+        - Gestion des commandes
+      summary: Creation Commande
+      description: CrÃ©e une nouvelle commande.Pour le client et les produits des lignes de
+        commande, seuls les identifiants sont nÃ©cessaires, les autres
+        informations si elles sont renseignÃ©es seront ignorÃ©es
+      operationId: creerCommande
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Commande"
+            examples:
+              json:
+                summary: Une creation de commande avec infos suffisantes
+                value: '{"date":"2020-02-05","lignes":[{"qte":10,"produit":{"id":"bb1a5333-0137-4d3d-87a2-e92a94328cba"}},{"qte":5,"produit":{"id":"bb1a5333-0137-4d3d-87a2-e92a94328cba"}}]}'             
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Commande"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Commande"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Commande"
+        "400":
+          description: Echec de crÃ©ation, donnÃ©es invalides
+  /commandes/{identifiant}:
+    get:
+      tags:
+        - Gestion des commandes
+      summary: Consultation d'une commande
+      description: Fournit les informations de la commande Ã  partir de son identifiant
+      operationId: getCommande
+      parameters:
+        - name: identifiant
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Commande"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Commande"
+        "404":
+          description: Identificant commande inconnu
+
+components:
+  schemas:
+    Identifiant:
+      type: string
+      format: uuid
+    Adresse:
+      type: object
+      properties:
+        numeroVoie:
+          type: integer
+          format: int32
+        typeVoie:
+          type: string
+          enum:
+            - RUE
+            - IMPASSE
+            - BOULEVARD
+            - AVENUE
+        nomVoie:
+          type: string
+        codePostal:
+          type: integer
+          pattern: "[0-9]{5}"
+          minimum: 1000
+          exclusiveMinimum: false
+        commune:
+          type: string
+    Client:
+      type: object
+      properties:
+        identifiant:
+          $ref: "#/components/schemas/Identifiant"
+        nom:
+          type: string
+        adresseLivraison:
+          $ref: "#/components/schemas/Adresse"
+        adresseFacturation:
+          $ref: "#/components/schemas/Adresse"
+        tel:
+          type: string
+          pattern: ^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$
+        mail:
+          type: string
+          format: email
+        vip:
+          type: boolean
+    Produit:
+      type: object
+      properties:
+        identifiant:
+          $ref: "#/components/schemas/Identifiant"
+        nom:
+          type: string
+        prix:
+          type: number
+          format: double
+        description:
+          type: string
+        poids:
+          type: number
+          format: float
+    LigneCommande:
+      type: object
+      required:
+        - quantite
+        - produit
+      properties:
+        quantite:
+          type: integer
+          minimum: 1
+          maximum: 50
+        produit:
+          $ref: "#/components/schemas/Produit"
+        montant:
+          type: number
+          format: double
+    Commande:
+      type: object
+      xml:
+        name: Commande
+      required:
+        - date
+        - lignes
+      properties:
+        identifiant:
+          $ref: "#/components/schemas/Identifiant"
+        client:
+          $ref: "#/components/schemas/Client"
+        date:
+          type: string
+          format: date
+        lignes:
+          type: array
+          items:
+            $ref: "#/components/schemas/LigneCommande"
+        montant:
+          type: number
+          format: double

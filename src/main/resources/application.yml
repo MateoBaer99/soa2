@@ -1,0 +1,11 @@
+# Configure HTTP Connector
+server:
+    port: 8090
+    context-path: /
+cxf:
+  path: /api # CXFServlet URL pattern
+  jaxrs:
+    component-scan: true
+    classes-scan-packages: com.fasterxml.jackson.jaxrs.json,  org.apache.cxf.jaxrs.validation    
+
+    

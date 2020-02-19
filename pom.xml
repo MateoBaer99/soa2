@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.universite</groupId>
+    <artifactId>RESTDesignFirstCxfCde</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <description>Gestion des commandes : Design first avec openapi 3.0</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>   
+        <cxf.version>3.3.5</cxf.version>        
+    </properties>
+ 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.2.RELEASE</version>
+        <relativePath/> 
+    </parent>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-spring-boot-starter-jaxrs</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- mapping JSON -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+        </dependency> 
+
+        <!-- Pour prendre en charge les annotations swagger générées dans le code -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-service-description-swagger</artifactId>
+            <version>${cxf.version}</version>            
+        </dependency> 
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generatedsrc-openapi/src/gen/java</source>                                       
+                            </sources>
+                        </configuration>                        
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <target>1.8</target>
+                    <excludes>
+                        <exclude>**/org/universite/ventes/api/impl/GestionDesCommandesApiServiceImpl.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+                  
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>4.2.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openApi3Commandes.yml</inputSpec>
+                            <generatorName>jaxrs-cxf</generatorName>
+                            <apiPackage>org.universite.ventes.api</apiPackage>
+                            <modelPackage>org.universite.ventes.api.model</modelPackage>
+                            <modelNameSuffix>Res</modelNameSuffix>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <generateApiTests>false</generateApiTests>
+                            <output>${project.build.directory}/generatedsrc-openapi</output>
+                            <templateDirectory>${project.basedir}/src/main/resources/templates</templateDirectory>    
+                 
+                            <configOptions>
+                                <dateLibrary>java8</dateLibrary>
+                                <withXml>true</withXml>
+                                <interfaceOnly>true</interfaceOnly>  
+                            </configOptions>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>        
+        </plugins>
+    </build>
+
+
+    <repositories>
+        <repository>
+            <id>maven central</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+    </repositories>
+
+
+</project>
+
