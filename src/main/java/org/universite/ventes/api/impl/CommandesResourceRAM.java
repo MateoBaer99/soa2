@@ -44,7 +44,7 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
                                      .nomVoie("des allouettes")
                                      .codePostal(31000)
                                      .commune("Toulouse");
-        Client client = new Client().identifiant("45874AV")
+        Client client = new Client().identifiant("cccccccc-6eb9-4786-ba3d-5fd4fa711cb8")
                              .nom("Larivee")
                              .mail("jerome.larivee@univ-tlse.fr")
                              .tel("33609090909")
@@ -52,18 +52,24 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
                              .adresseLivraison(adresse);
         clients.put(client.getIdentifiant(), client);
         
-        // Création de produits
+        // Création de produits avec forçage des identifiants pour simplifier les tests
         Produit prod1=new Produit().name("Cutter4X").description("Cutter fer 4 lames").poids((float) 0.2).prix(23.34);
+        prod1.setId(UUID.fromString("fd5362a7-6eb9-4786-ba3d-5fd4fa711cb8"));
         produits.put(prod1.getId(), prod1);
         Produit prod2=new Produit().name("CutterPs").description("Cutter plastique 1ier prix").poids((float) 0.1).prix(5.30);
+        prod2.setId(UUID.fromString("298ab06e-1750-4b9c-80ba-d65879616659"));
         produits.put(prod2.getId(), prod2);
         Produit prod3=new Produit().name("CiseauxXT").description("Ciseaux carton").poids((float) 0.15).prix(13.34);
+        prod3.setId(UUID.fromString("841f7963-04a6-479b-ae28-964436abf374"));
         produits.put(prod3.getId(), prod3);        
         Produit prod4=new Produit().name("MasseH100").description("Masse professionnelle").poids((float) 1.5).prix(128.55);
+        prod4.setId(UUID.fromString("41a54374-b77c-4bb1-946c-7e1dec94d890"));
         produits.put(prod4.getId(), prod4); 
         Produit prod5=new Produit().name("MarteauTR2").description("Marteau de charpentier").poids((float) 1.0).prix(45);
+        prod5.setId(UUID.fromString("3bcd447c-5d85-4efc-9826-ede4d5c0a505"));
         produits.put(prod5.getId(), prod5);
         Produit prod6=new Produit().name("CrayonXX124").description("Crayon mine bois pro").poids((float) 0.05).prix(2.5);
+        prod6.setId(UUID.fromString("3bcd447c-5d85-4efc-9826-ede4d5c0a408"));
         produits.put(prod6.getId(), prod6);
         
        
