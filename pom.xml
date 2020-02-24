@@ -27,11 +27,15 @@
             <artifactId>cxf-spring-boot-starter-jaxrs</artifactId>
             <version>${cxf.version}</version>
         </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-features-logging -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-features-logging</artifactId>
+            <version>3.3.5</version>
+            <type>jar</type>
         </dependency>
+
         
         <!-- mapping JSON -->
         <dependency>

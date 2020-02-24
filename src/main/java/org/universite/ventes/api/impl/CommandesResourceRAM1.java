@@ -15,21 +15,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.springframework.stereotype.Component;
 import org.universite.ventes.util.Utility;
 import org.universite.ventes.api.GestionDesCommandesApi;
 import org.universite.ventes.api.model.CommandeRes;
 import org.universite.ventes.domain.Adresse.TypeVoieEnum;
-import org.universite.ventes.exceptions.InformationsCommandesException;
-import org.universite.ventes.exceptions.ProduitsInconnusException;
 
 
 /**
  *
  * @author PAKI6340
  */
-@Component("GestionDesCommandesApi")
-public class CommandesResourceRAM implements GestionDesCommandesApi{
+//@Component("GestionDesCommandesApi")
+public class CommandesResourceRAM1 implements GestionDesCommandesApi{
   
     //Initialisation de données en RAM
     public static Map<String,Client> clients=new HashMap<>();
@@ -93,19 +95,21 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
         Commande cde;
         //on vérifie que les produits commandés existent bien*
          try {
-            if (commandeRes.getLignes().size()== 
-                    commandeRes.getLignes().stream()
-                                           .filter(lc -> produits.containsKey(lc.getProduit().getIdentifiant()))
-                                           .count()) { 
+            if (commandeRes.getLignes().size()== commandeRes.getLignes().stream()
+                                                                  .filter(lc -> produits.containsKey(lc.getProduit().getIdentifiant()))
+                                                                  .count()) { 
             } else {
-                throw new ProduitsInconnusException();
+                throw new WebApplicationException("Produits commandés non valides : inconnus au catalogue",Response.Status.BAD_REQUEST);
             }
             //On affecte le produit du catalogue
             cde=Utility.toDomain(commandeRes);
             commandes.put(cde.getId(),cde);
    
         } catch (Exception e) {
-            throw new InformationsCommandesException();
+            throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+                                                      .entity("{\"Erreur\": \"Infos commandes incorrectes\"}")
+                                                      .type(MediaType.TEXT_XML_TYPE)
+                                                      .build());
         }
 
 
@@ -122,9 +126,9 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
 
     @Override
     public List<CommandeRes> getCommandes() {
-         return commandes.values()
-                 .stream()
-                 .map(cde -> Utility.toResource(cde))
-                 .collect(Collectors.toList());
+         return (List<CommandeRes>) commandes.values()
+                                             .stream()
+                                             .map(cde -> Utility.toResource(cde))
+                                             .collect(Collectors.toList());
     }
 }
