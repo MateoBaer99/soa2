@@ -7,6 +7,8 @@ package org.universite.ventes;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.ValidationException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
@@ -18,6 +20,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import org.universite.ventes.api.impl.RestException;
 import org.universite.ventes.exceptions.AppliException;
+import org.universite.ventes.exceptions.InformationsCommandesException;
 /**
  * Gestion des exceptions : retourne un message plus explicite avec le bon format
  * log la méthode ayant déclenchée l'exception
@@ -25,9 +28,10 @@ import org.universite.ventes.exceptions.AppliException;
  */
 @Provider
 @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-public class MyExceptionMapper implements ExceptionMapper<AppliException> {
+public class MyExceptionMapper implements ExceptionMapper<Exception> {
     
     @Context private ResourceInfo resourceInfo;
+    @Context private HttpServletRequest request;
     @Context private HttpHeaders headers;
 
     private final Set<MediaType> mediaProduces;
@@ -37,11 +41,22 @@ public class MyExceptionMapper implements ExceptionMapper<AppliException> {
     }
 
     @Override
-    public Response toResponse(AppliException e) {
+    public Response toResponse(Exception e) {
         System.out.println("Exception dans :"+resourceInfo.getClass()+":"+resourceInfo.getResourceMethod());
+        System.out.println("Exception class :"+e.getClass());
+        Status status=Status.BAD_REQUEST;
+        if (e instanceof UnsupportedOperationException) {
+            status=Status.NOT_IMPLEMENTED;
+        } else if (e instanceof ValidationException ) {
+            status=Status.BAD_REQUEST;
+        } else if (e instanceof InformationsCommandesException ) {
+            status=Status.BAD_REQUEST;
+        } else if (e instanceof AppliException) {
+            status=Status.NOT_FOUND;
+        }  
                
-        RestException restEx=new RestException(Status.BAD_REQUEST.getStatusCode(),e.getMessage(),e.getCause());
-        return Response.status(Status.BAD_REQUEST)
+        RestException restEx=new RestException(status.getStatusCode(),e.getMessage(),e.getCause());
+        return Response.status(status)
                        .entity(restEx)
                        .type(getMediaType())
                        .build();
