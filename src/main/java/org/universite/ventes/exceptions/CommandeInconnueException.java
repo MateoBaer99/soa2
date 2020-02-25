@@ -11,8 +11,14 @@ package org.universite.ventes.exceptions;
  */
 public class CommandeInconnueException extends AppliException {
 
+   private static final  String MESSAGE="Identifiant de commande incorrect";
+
     public CommandeInconnueException() {
-        super("Identifiant de commande inexistant");
+        super(MESSAGE);
+    }
+
+        public CommandeInconnueException(Throwable t) {
+        super(MESSAGE,t);
     }
     
 }

@@ -10,9 +10,13 @@ package org.universite.ventes.exceptions;
  * @author akriks
  */
 public class ProduitsInconnusException extends AppliException {
+    private static final  String MESSAGE="Des références produits de votre commande sont inconnus";
 
     public ProduitsInconnusException() {
-        super("Des références produits de votre commande sont inconnus");
+        super(MESSAGE);
+    }
+    public ProduitsInconnusException(Throwable t) {
+        super(MESSAGE,t);
     }
     
 }

@@ -9,8 +9,17 @@ package org.universite.ventes.exceptions;
  *
  * @author akriks
  */
-public class AppliException extends Exception {
+public class AppliException extends RuntimeException {
+        
+        public AppliException() {
+            super();
+        }        
         public AppliException(String message) {
             super(message);
         }
+        
+        public AppliException(String message, Throwable t) {
+            super(message, t);
+        }
+        
 }

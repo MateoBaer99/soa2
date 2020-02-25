@@ -20,6 +20,7 @@ import org.universite.ventes.util.Utility;
 import org.universite.ventes.api.GestionDesCommandesApi;
 import org.universite.ventes.api.model.CommandeRes;
 import org.universite.ventes.domain.Adresse.TypeVoieEnum;
+import org.universite.ventes.exceptions.AppliException;
 import org.universite.ventes.exceptions.InformationsCommandesException;
 import org.universite.ventes.exceptions.ProduitsInconnusException;
 
@@ -93,11 +94,10 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
         Commande cde;
         //on vérifie que les produits commandés existent bien*
          try {
-            if (commandeRes.getLignes().size()== 
+            if (commandeRes.getLignes().size()!= 
                     commandeRes.getLignes().stream()
-                                           .filter(lc -> produits.containsKey(lc.getProduit().getIdentifiant()))
-                                           .count()) { 
-            } else {
+                            .filter(lc -> produits.containsKey(lc.getProduit().getIdentifiant()))
+                            .count()) {
                 throw new ProduitsInconnusException();
             }
             //On affecte le produit du catalogue
@@ -105,7 +105,11 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
             commandes.put(cde.getId(),cde);
    
         } catch (Exception e) {
-            throw new InformationsCommandesException();
+            if (e instanceof AppliException) {
+                throw e;
+            } else {
+                throw new InformationsCommandesException(e);
+            }
         }
 
 
