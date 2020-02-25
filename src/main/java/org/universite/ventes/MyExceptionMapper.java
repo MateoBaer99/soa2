@@ -7,7 +7,6 @@ package org.universite.ventes;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Produces;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
@@ -66,7 +65,7 @@ public class MyExceptionMapper implements ExceptionMapper<AppliException> {
         //alors on  retient le 1er (il faudrait normalement regarder les priorités) 
         if (null!=mediaProduces) {
              mediaReponse=mediaProduces.iterator().next();
-            if (null!=mediaAccept) {
+            if (!mediaAccept.isEmpty()) {
                 for (MediaType medAccept:mediaAccept) {
                     if (mediaProduces.contains(medAccept)) {
                         mediaReponse=medAccept;
@@ -95,7 +94,6 @@ public class MyExceptionMapper implements ExceptionMapper<AppliException> {
                      }
                   }
             } catch (Throwable t) {
-                t.printStackTrace();
                 return null;
             }
             return mediaTypes;
