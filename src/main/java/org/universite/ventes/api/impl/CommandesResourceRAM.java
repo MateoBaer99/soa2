@@ -29,6 +29,7 @@ import org.universite.ventes.exceptions.AppliException;
 import org.universite.ventes.exceptions.InformationsCommandesException;
 import org.universite.ventes.exceptions.ProduitsInconnusException;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Response.Status;
 
 /**
  *
@@ -136,10 +137,11 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
              links.add(Link.fromUriBuilder(uriInfo.getBaseUriBuilder()
                                                   .path(GestionDesCommandesApi.class)
                                                   .path(GestionDesCommandesApi.class, "deleteCommande"))
-                  .rel("delete")
-                  .build(cde.getId()));    
+                           .rel("delete")
+                           .build(cde.getId()));    
         }
        return Response.ok(Utility.toResource(cde))
+                      .status(Status.CREATED)
                       .links(links.toArray(new Link[links.size()]))
                       .build();
     }    
@@ -150,8 +152,19 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
            new GenericEntity<List<CommandeRes>>(commandes.values()
                                                       .stream()
                                                       .map(cde -> Utility.toResource(cde))
-                                                      .collect(Collectors.toList())) {};
-           return Response.ok(cdeRes).build();
+                                                      .collect(Collectors.toList())) {};    
+        List<Link> links=
+           new ArrayList<Link>(commandes.values().stream().map(cde -> 
+                                        Link.fromUriBuilder(uriInfo.getBaseUriBuilder()
+                                                                   .path(GestionDesCommandesApi.class)
+                                                                   .path(GestionDesCommandesApi.class, "getCommande"))
+                                            .rel("details")
+                                            .build(cde.getId()))
+                                   .collect(Collectors.toList())) {};
+                                     
+        return Response.ok(cdeRes)
+                       .links(links.toArray(new Link[links.size()]))
+                       .build();
     }
     
     @Override
