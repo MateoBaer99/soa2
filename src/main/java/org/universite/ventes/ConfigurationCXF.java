@@ -5,9 +5,12 @@
  */
 package org.universite.ventes;
 
-import javax.ws.rs.ext.Provider;
+import java.util.List;
+import java.util.Map;
+import org.apache.cxf.Bus;
 import org.apache.cxf.ext.logging.LoggingFeature;
 import org.apache.cxf.jaxrs.validation.ValidationExceptionMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,19 +20,22 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class ConfigurationCXF {
- 
-@Bean
-public LoggingFeature myLogger() {
-    LoggingFeature logger= new LoggingFeature();
-    logger.setLimit(4096);
-    return logger;
-}
+    
+    @Autowired
+    private Bus bus;
+  
+    @Bean
+    public LoggingFeature myLogger() {
+        LoggingFeature logger= new LoggingFeature();
+        logger.setLimit(4096);
+        return logger;
+    }
 
-@Bean
-public ValidationExceptionMapper myMapper() {
-    ValidationExceptionMapper myMapper= new ValidationExceptionMapper();
-    myMapper.setAddMessageToResponse(true);
-    return myMapper;
-}
+    @Bean
+    public ValidationExceptionMapper myMapper() {
+        ValidationExceptionMapper myMapper= new ValidationExceptionMapper();
+        myMapper.setAddMessageToResponse(true);
+        return myMapper;
+    }
 
 }

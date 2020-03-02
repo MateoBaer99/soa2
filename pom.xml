@@ -28,27 +28,32 @@
             <version>${cxf.version}</version>
         </dependency>
         
-        <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-features-logging -->
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-features-logging</artifactId>
-            <version>3.3.5</version>
-            <type>jar</type>
-        </dependency>
-
-        
-        <!-- mapping JSON -->
+        <!-- Utilisation du framework Jackson pour le mapping JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
         </dependency> 
-
-        <!-- Pour prendre en charge les annotations swagger générées dans le code -->
+        
+        <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-features-logging -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-features-logging</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <!-- Pour prendre en charge les annotations swagger générées par openapi-generator -->
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-service-description-swagger</artifactId>
             <version>${cxf.version}</version>            
-        </dependency> 
+        </dependency>
+
+        <!-- Nécessaire pour avoir l'IHM swagger-ui de documentation et test-->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>swagger-ui</artifactId>
+            <version>3.25.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -113,6 +118,7 @@
                                 <dateLibrary>java8</dateLibrary>
                                 <withXml>true</withXml>
                                 <interfaceOnly>true</interfaceOnly>  
+                               <useGenericResponse>true</useGenericResponse>  
                             </configOptions>
 
                         </configuration>

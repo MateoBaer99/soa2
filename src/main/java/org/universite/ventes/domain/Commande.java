@@ -71,5 +71,9 @@ public class Commande {
     public void setLignes(List<LigneCommande> lignes) {
         this.lignes = lignes;
     }
+
+    public boolean isSupprimable() {
+        return getMontant()<500;
+    }
     
 }
