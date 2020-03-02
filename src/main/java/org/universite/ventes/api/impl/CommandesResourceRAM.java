@@ -10,11 +10,16 @@ import org.universite.ventes.domain.Adresse;
 import org.universite.ventes.domain.Client;
 import org.universite.ventes.domain.Produit;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Link;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import org.springframework.stereotype.Component;
 import org.universite.ventes.util.Utility;
 import org.universite.ventes.api.GestionDesCommandesApi;
@@ -23,7 +28,7 @@ import org.universite.ventes.domain.Adresse.TypeVoieEnum;
 import org.universite.ventes.exceptions.AppliException;
 import org.universite.ventes.exceptions.InformationsCommandesException;
 import org.universite.ventes.exceptions.ProduitsInconnusException;
-
+import javax.ws.rs.core.GenericEntity;
 
 /**
  *
@@ -31,6 +36,8 @@ import org.universite.ventes.exceptions.ProduitsInconnusException;
  */
 @Component("GestionDesCommandesApi")
 public class CommandesResourceRAM implements GestionDesCommandesApi{
+    
+    @Context UriInfo uriInfo;
   
     //Initialisation de données en RAM
     public static Map<String,Client> clients=new HashMap<>();
@@ -90,7 +97,7 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
     
 
     @Override
-    public CommandeRes creerCommande(CommandeRes commandeRes) {
+    public Response creerCommande(CommandeRes commandeRes) {
         Commande cde;
         //on vérifie que les produits commandés existent bien*
          try {
@@ -114,21 +121,46 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
 
 
 //        commandes.put(commande.getId(),commande);
-       // return Response.created(URI.create("/commandes/"+commande.getId())).build();
-       return Utility.toResource(cde);
-
+        List<Link> links=new ArrayList<>();
+        links.add(Link.fromUriBuilder(uriInfo.getRequestUriBuilder()
+                                             .path(cde.getId().toString()))
+                     .rel("self")
+                     .build());
+        links.add(Link.fromUriBuilder(uriInfo.getBaseUriBuilder()
+                                             .path(GestionDesCommandesApi.class)
+                                             .path(GestionDesCommandesApi.class,"getCommandes"))
+                      .rel("collection")
+                      .build());
+        // On met le link delete uniquement si c possible (montant commande < 500
+        if (cde.isSupprimable()) {
+             links.add(Link.fromUriBuilder(uriInfo.getBaseUriBuilder()
+                                                  .path(GestionDesCommandesApi.class)
+                                                  .path(GestionDesCommandesApi.class, "deleteCommande"))
+                  .rel("delete")
+                  .build(cde.getId()));    
+        }
+       return Response.ok(Utility.toResource(cde))
+                      .links(links.toArray(new Link[links.size()]))
+                      .build();
     }    
 
     @Override
-    public CommandeRes getCommande(String identifiant) {
+    public Response getCommandes() {    
+        GenericEntity<List<CommandeRes>> cdeRes =
+           new GenericEntity<List<CommandeRes>>(commandes.values()
+                                                      .stream()
+                                                      .map(cde -> Utility.toResource(cde))
+                                                      .collect(Collectors.toList())) {};
+           return Response.ok(cdeRes).build();
+    }
+    
+    @Override
+    public Response getCommande(String identifiant) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
-    public List<CommandeRes> getCommandes() {
-         return commandes.values()
-                 .stream()
-                 .map(cde -> Utility.toResource(cde))
-                 .collect(Collectors.toList());
-    }
+    public Response deleteCommande(String identifiant) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }    
 }

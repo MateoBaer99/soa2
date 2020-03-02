@@ -72,4 +72,7 @@ public class Commande {
         this.lignes = lignes;
     }
     
+    public boolean isSupprimable() {
+        return getMontant()<500;
+    }
 }
