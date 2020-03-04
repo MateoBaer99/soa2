@@ -30,6 +30,7 @@ import org.universite.ventes.exceptions.InformationsCommandesException;
 import org.universite.ventes.exceptions.ProduitsInconnusException;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response.Status;
+import org.universite.ventes.exceptions.CommandeInconnueException;
 
 /**
  *
@@ -52,7 +53,7 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
                                      .nomVoie("des allouettes")
                                      .codePostal(31000)
                                      .commune("Toulouse");
-        Client client = new Client().identifiant("cccccccc-6eb9-4786-ba3d-5fd4fa711cb8")
+        Client client = new Client().identifiant("cccccccc-cccc-cccc-cccc-cccccccc")
                              .nom("Larivee")
                              .mail("jerome.larivee@univ-tlse.fr")
                              .tel("33609090909")
@@ -102,6 +103,7 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
         Commande cde;
         //on vérifie que les produits commandés existent bien*
          try {
+            
             if (commandeRes.getLignes().size()!= 
                     commandeRes.getLignes().stream()
                             .filter(lc -> produits.containsKey(lc.getProduit().getIdentifiant()))
@@ -120,26 +122,8 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
             }
         }
 
+       List<Link> links=addLinks(cde);
 
-//        commandes.put(commande.getId(),commande);
-        List<Link> links=new ArrayList<>();
-        links.add(Link.fromUriBuilder(uriInfo.getRequestUriBuilder()
-                                             .path(cde.getId().toString()))
-                     .rel("self")
-                     .build());
-        links.add(Link.fromUriBuilder(uriInfo.getBaseUriBuilder()
-                                             .path(GestionDesCommandesApi.class)
-                                             .path(GestionDesCommandesApi.class,"getCommandes"))
-                      .rel("collection")
-                      .build());
-        // On met le link delete uniquement si c possible (montant commande < 500
-        if (cde.isSupprimable()) {
-             links.add(Link.fromUriBuilder(uriInfo.getBaseUriBuilder()
-                                                  .path(GestionDesCommandesApi.class)
-                                                  .path(GestionDesCommandesApi.class, "deleteCommande"))
-                           .rel("delete")
-                           .build(cde.getId()));    
-        }
        return Response.ok(Utility.toResource(cde))
                       .status(Status.CREATED)
                       .links(links.toArray(new Link[links.size()]))
@@ -169,11 +153,44 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
     
     @Override
     public Response getCommande(String identifiant) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Commande cde;
+        CommandeRes cdeRes;
+        try {
+            cde=commandes.get(UUID.fromString(identifiant));
+            cdeRes=Utility.toResource(cde);
+        } catch (Exception e) {
+                throw new CommandeInconnueException(e);
+        }
+        List<Link> links=addLinks(cde);
+                                     
+        return Response.ok(cdeRes)
+                       .links(links.toArray(new Link[links.size()]))
+                       .build();        
     }
     
     @Override
     public Response deleteCommande(String identifiant) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }    
+    
+    private List<Link> addLinks(Commande cde) {
+                List<Link> links=new ArrayList<>();
+        links.add(Link.fromUriBuilder(uriInfo.getRequestUriBuilder())
+                      .rel("self")
+                      .build());
+        links.add(Link.fromUriBuilder(uriInfo.getBaseUriBuilder()
+                                             .path(GestionDesCommandesApi.class)
+                                             .path(GestionDesCommandesApi.class,"getCommandes"))
+                      .rel("collection")
+                      .build());
+        // On met le link delete uniquement si c possible (montant commande < 500
+        if (cde.isSupprimable()) {
+             links.add(Link.fromUriBuilder(uriInfo.getBaseUriBuilder()
+                                                  .path(GestionDesCommandesApi.class)
+                                                  .path(GestionDesCommandesApi.class, "deleteCommande"))
+                           .rel("delete")
+                           .build(cde.getId()));    
+        }
+        return links;
+    }
 }

@@ -20,6 +20,7 @@ public class Commande {
     
     private UUID id;
     private LocalDate date;
+    private Client client;
     private List<LigneCommande> lignes; 
     
 
@@ -36,6 +37,9 @@ public class Commande {
 
     public LocalDate getDate() {
         return date;
+    }
+    public Client getClient() {
+        return client;
     }
 
     public List<LigneCommande> getLignes() {
@@ -70,6 +74,10 @@ public class Commande {
 
     public void setLignes(List<LigneCommande> lignes) {
         this.lignes = lignes;
+    }
+    
+    public void setClient(Client client) {
+        this.client = client;
     }
     
     public boolean isSupprimable() {

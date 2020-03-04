@@ -80,12 +80,12 @@ paths:
               operationRef: 'http://aide.api.ventes/index.html'
 
   /commandes/{identifiant}:
-    get:
+    delete:
       tags:
         - Gestion des commandes
-      summary: Consultation d'une commande
-      description: Fournit les informations de la commande Ã  partir de son identifiant
-      operationId: getCommande
+      summary: Suppression d'une commande
+      description: suppression de la commande Ã  partir de son identifiant
+      operationId: deleteCommande
       parameters:
         - name: identifiant
           in: path
@@ -101,12 +101,12 @@ paths:
               description: Liste complète des commandes.          
         "404":
           description: Identificant commande inconnu
-    delete:
+    get:
       tags:
         - Gestion des commandes
-      summary: Suppression d'une commande
-      description: supression de la commande Ã  partir de son identifiant
-      operationId: deleteCommande
+      summary: Consultation d'une commande
+      description: Fournit les informations de la commande Ã  partir de son identifiant
+      operationId: getCommande
       parameters:
         - name: identifiant
           in: path
@@ -124,6 +124,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/Commande"
           links:
+            getCommandeById:  
+              operationId: getCommande
+              parameters:
+                identifiant: '$response.body#/components/schemas/Commande/identifiant'
+              description: self
+            deleteCommande:
+               operationId: deleteCommande
+               parameters:
+                identifiant: '$response.body#/components/schemas/Commande/identifiant'
+               description: suppression commande si règles de gestion l'autorisent               
             getToutesCommandes:  
               operationId: getCommandes
               description: Liste complète des commandes.          
