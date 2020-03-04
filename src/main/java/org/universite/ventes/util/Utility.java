@@ -75,6 +75,7 @@ public class Utility {
         CommandeRes cdeRes = new CommandeRes();
         cdeRes.identifiant(cde.getId())
                 .date(cde.getDate())
+                .client(toResource(cde.getClient()))
                 .montant(cde.getMontant())
                 .lignes(cde.getLignes().stream()
                         .map((LigneCommande ligne) -> toResource(ligne))
