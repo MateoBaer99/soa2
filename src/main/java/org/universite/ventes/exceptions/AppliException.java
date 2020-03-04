@@ -14,14 +14,14 @@ public class AppliException extends RuntimeException {
        private static final  String MESSAGE="Informations  incorrectes - Vérifiez vos données";
         
         public AppliException() {
-            super();
+            super(MESSAGE);
         }        
         public AppliException(String message) {
-            super(MESSAGE);
+          super(message);
         }
         
         public AppliException(String message, Throwable t) {
-            super(MESSAGE, t);
+            super(message, t);
         }
         
 }
