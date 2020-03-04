@@ -5,13 +5,15 @@
  */
 package org.universite.ventes.domain;
  
+import java.util.UUID;
+
 /**
  *
  * @author PAKI6340
  */ 
 public class Client {
     
-    private String identifiant;
+    private UUID identifiant;
     private String nom;
     private Adresse adresseLivraison;
     private Adresse adresseFacturation;
@@ -19,7 +21,7 @@ public class Client {
     private String mail;
     private boolean vip;
 
-    public String getIdentifiant() {
+    public UUID getIdentifiant() {
         return identifiant;
     }
 
@@ -47,7 +49,7 @@ public class Client {
         return vip;
     }
 
-    public Client identifiant(final String value) {
+    public Client identifiant(final UUID value) {
         this.identifiant = value;
         return this;
     }

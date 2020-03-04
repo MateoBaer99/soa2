@@ -14,10 +14,10 @@ public class Adresse {
 
     public enum TypeVoieEnum {
 
-        RUE("rue"), 
-        IMPASSE("impasse"), 
-        BOULEVARD("boulevard"), 
-        AVENUE("avenue");
+        RUE("RUE"), 
+        IMPASSE("IMPASSE"), 
+        BOULEVARD("BOULEVARD"), 
+        AVENUE("AVENUE");
 
         private String value;
 

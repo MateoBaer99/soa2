@@ -51,7 +51,7 @@ public class Utility {
 
     private static Client toDomain(ClientRes res) {
         Client client = new Client();
-        client.identifiant(res.getIdentifiant().toString())
+        client.identifiant(res.getIdentifiant())
                 .nom(res.getNom())
                 .vip(res.getVip())
                 .tel(res.getTel())
@@ -85,7 +85,7 @@ public class Utility {
 
     public static LigneCommandeRes toResource(LigneCommande ligne) {
         LigneCommandeRes ligneRes = new LigneCommandeRes();
-        ligneRes.produit(Utility.toResource(ligne.getProduit()))
+        ligneRes.produit(toResource(ligne.getProduit()))
                 .quantite(ligne.getQte())
                 .montant(ligne.getMontant());
         return ligneRes;
@@ -103,23 +103,27 @@ public class Utility {
 
     private static ClientRes toResource(Client client) {
         ClientRes clientRes = new ClientRes();
-        clientRes.setIdentifiant(UUID.fromString(client.getIdentifiant()));
-        clientRes.setNom(client.getNom());
-        clientRes.setVip(client.isVip());
-        clientRes.setTel(client.getTel());
-        clientRes.setMail(client.getMail());
-        clientRes.setAdresseFacturation(toResource(client.getAdresseFacturation()));
-        clientRes.setAdresseLivraison(toResource(client.getAdresseLivraison()));
+        if (null!=client)  {
+            clientRes.setIdentifiant(client.getIdentifiant());
+            clientRes.setNom(client.getNom());
+            clientRes.setVip(client.isVip());
+            clientRes.setTel(client.getTel());
+            clientRes.setMail(client.getMail());
+            clientRes.setAdresseFacturation(toResource(client.getAdresseFacturation()));
+            clientRes.setAdresseLivraison(toResource(client.getAdresseLivraison()));
+        }
         return clientRes;
     }
 
     private static AdresseRes toResource(Adresse adresse) {
         AdresseRes res = new AdresseRes();
-        res.setNumeroVoie(adresse.getNumeroVoie());
-        res.setTypeVoie(AdresseRes.TypeVoieEnum.valueOf(adresse.getTypeVoie().toString()));
-        res.setNomVoie(adresse.getNomVoie());
-        res.setCodePostal(adresse.getCodePostal());
-        res.setCommune(adresse.getCommune());
+        if (null!=adresse) {
+            res.setNumeroVoie(adresse.getNumeroVoie());
+            res.setTypeVoie(AdresseRes.TypeVoieEnum.valueOf(adresse.getTypeVoie().toString()));
+            res.setNomVoie(adresse.getNomVoie());
+            res.setCodePostal(adresse.getCodePostal());
+            res.setCommune(adresse.getCommune());
+        }
         return res;
     }    
 

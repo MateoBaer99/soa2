@@ -42,7 +42,7 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
     @Context UriInfo uriInfo;
   
     //Initialisation de données en RAM
-    public static Map<String,Client> clients=new HashMap<>();
+    public static Map<UUID,Client> clients=new HashMap<>();
     public static Map<UUID,Commande> commandes=new HashMap<>();
     public static Map<UUID,Produit> produits=new HashMap<>();
         
@@ -53,7 +53,7 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
                                      .nomVoie("des allouettes")
                                      .codePostal(31000)
                                      .commune("Toulouse");
-        Client client = new Client().identifiant("cccccccc-cccc-cccc-cccc-cccccccc")
+        Client client = new Client().identifiant(UUID.fromString("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
                              .nom("Larivee")
                              .mail("jerome.larivee@univ-tlse.fr")
                              .tel("33609090909")
