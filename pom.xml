@@ -129,12 +129,38 @@
     </build>
 
 
-    <repositories>
+      <repositories>
         <repository>
-            <id>maven central</id>
-            <url>https://repo1.maven.org/maven2/</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <id>central</id>
+          <name>libs-release</name>
+          <url>http://etu-repo:8081/artifactory/libs-release</url>
         </repository>
-    </repositories>
+        <repository>
+          <snapshots />
+          <id>snapshots</id>
+          <name>libs-snapshot</name>
+          <url>http://etu-repo:8081/artifactory/libs-snapshot</url>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <id>central</id>
+          <name>libs-release</name>
+          <url>http://etu-repo:8081/artifactory/libs-release</url>
+        </pluginRepository>
+        <pluginRepository>
+          <snapshots />
+          <id>snapshots</id>
+          <name>libs-snapshot</name>
+          <url>http://etu-repo:8081/artifactory/libs-snapshot</url>
+        </pluginRepository>
+      </pluginRepositories>
 
 
 </project>
