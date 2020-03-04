@@ -10,16 +10,18 @@ package org.universite.ventes.exceptions;
  * @author akriks
  */
 public class AppliException extends RuntimeException {
+ 
+       private static final  String MESSAGE="Informations  incorrectes - Vérifiez vos données";
         
         public AppliException() {
             super();
         }        
         public AppliException(String message) {
-            super(message);
+            super(MESSAGE);
         }
         
         public AppliException(String message, Throwable t) {
-            super(message, t);
+            super(MESSAGE, t);
         }
         
 }

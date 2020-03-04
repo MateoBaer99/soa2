@@ -52,6 +52,11 @@ public class Commande {
         return this;
     }
 
+    public Commande client(final Client client) {
+        this.client = client;
+        return this;
+    }
+    
     public Commande addLigne(Produit produit,int qte)  {
         lignes.add(new LigneCommande(produit,qte));
         return this;

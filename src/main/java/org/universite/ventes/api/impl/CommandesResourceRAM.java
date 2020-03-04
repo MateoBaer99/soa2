@@ -83,14 +83,16 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
         
        
         // Création d'1 commande de 3 produits                
-        Commande com1=new Commande().date(LocalDate.of(2019, 03, 13))
+        Commande com1=new Commande().client(client)
+                           .date(LocalDate.of(2019, 03, 13))
                            .addLigne(prod1,5)
                            .addLigne(prod3,8)
                            .addLigne(prod5,20);
         commandes.put(com1.getId(),com1);
         
         //Création d'1 autre commande avec 2 produits
-        Commande com2=new Commande().date(LocalDate.of(2020, 01, 18))
+        Commande com2=new Commande().client(client)
+                           .date(LocalDate.of(2020, 01, 18))
                            .addLigne(prod3,1)
                            .addLigne(prod6,10);
         commandes.put(com2.getId(),com2);        
@@ -101,6 +103,7 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
     @Override
     public Response creerCommande(CommandeRes commandeRes) {
         Commande cde;
+        CommandeRes cdeRes;
         //on vérifie que les produits commandés existent bien*
          try {
             
@@ -113,6 +116,7 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
             //On affecte le produit du catalogue
             cde=Utility.toDomain(commandeRes);
             commandes.put(cde.getId(),cde);
+            cdeRes=Utility.toResource(cde);
    
         } catch (Exception e) {
             if (e instanceof AppliException) {
@@ -124,7 +128,7 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
 
        List<Link> links=addLinks(cde);
 
-       return Response.ok(Utility.toResource(cde))
+       return Response.ok(cdeRes)
                       .status(Status.CREATED)
                       .links(links.toArray(new Link[links.size()]))
                       .build();
