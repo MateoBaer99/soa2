@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.springframework.stereotype.Component;
@@ -126,11 +125,8 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
             }
         }
 
-       List<Link> links=addLinks(cde);
-
        return Response.ok(cdeRes)
                       .status(Status.CREATED)
-                      .links(links.toArray(new Link[links.size()]))
                       .build();
     }    
 
@@ -141,60 +137,14 @@ public class CommandesResourceRAM implements GestionDesCommandesApi{
                                                       .stream()
                                                       .map(cde -> Utility.toResource(cde))
                                                       .collect(Collectors.toList())) {};    
-        List<Link> links=
-           new ArrayList<Link>(commandes.values().stream().map(cde -> 
-                                        Link.fromUriBuilder(uriInfo.getBaseUriBuilder()
-                                                                   .path(GestionDesCommandesApi.class)
-                                                                   .path(GestionDesCommandesApi.class, "getCommande"))
-                                            .rel("details")
-                                            .build(cde.getId()))
-                                   .collect(Collectors.toList())) {};
                                      
         return Response.ok(cdeRes)
-                       .links(links.toArray(new Link[links.size()]))
                        .build();
     }
     
     @Override
     public Response getCommande(String identifiant) {
-        Commande cde;
-        CommandeRes cdeRes;
-        try {
-            cde=commandes.get(UUID.fromString(identifiant));
-            cdeRes=Utility.toResource(cde);
-        } catch (Exception e) {
-                throw new CommandeInconnueException(e);
-        }
-        List<Link> links=addLinks(cde);
-                                     
-        return Response.ok(cdeRes)
-                       .links(links.toArray(new Link[links.size()]))
-                       .build();        
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.      
     }
     
-    @Override
-    public Response deleteCommande(String identifiant) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }    
-    
-    private List<Link> addLinks(Commande cde) {
-                List<Link> links=new ArrayList<>();
-        links.add(Link.fromUriBuilder(uriInfo.getRequestUriBuilder())
-                      .rel("self")
-                      .build());
-        links.add(Link.fromUriBuilder(uriInfo.getBaseUriBuilder()
-                                             .path(GestionDesCommandesApi.class)
-                                             .path(GestionDesCommandesApi.class,"getCommandes"))
-                      .rel("collection")
-                      .build());
-        // On met le link delete uniquement si c possible (montant commande < 500
-        if (cde.isSupprimable()) {
-             links.add(Link.fromUriBuilder(uriInfo.getBaseUriBuilder()
-                                                  .path(GestionDesCommandesApi.class)
-                                                  .path(GestionDesCommandesApi.class, "deleteCommande"))
-                           .rel("delete")
-                           .build(cde.getId()));    
-        }
-        return links;
-    }
 }

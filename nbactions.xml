@@ -65,4 +65,12 @@
                 <goal>package</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-cleanpack</actionName>
+            <displayName>cleanpack</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>package</goal>
+            </goals>
+        </action>
     </actions>
