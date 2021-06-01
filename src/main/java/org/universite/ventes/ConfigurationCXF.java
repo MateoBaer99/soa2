@@ -10,6 +10,7 @@ import org.apache.cxf.ext.logging.LoggingFeature;
 import org.apache.cxf.jaxrs.validation.ValidationExceptionMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.universite.ventes.api.impl.MyValidationExceptionMapper;
 
 /**
  * Configuration du framework CXF
@@ -24,11 +25,10 @@ public LoggingFeature myLogger() {
     logger.setLimit(4096);
     return logger;
 }
-
 @Bean
-public ValidationExceptionMapper myMapper() {
-    ValidationExceptionMapper myMapper= new ValidationExceptionMapper();
-    myMapper.setAddMessageToResponse(true);
+public MyValidationExceptionMapper myMapper() {
+    MyValidationExceptionMapper myMapper= new MyValidationExceptionMapper();
+  //  myMapper.setAddMessageToResponse(true);
     return myMapper;
 }
 
